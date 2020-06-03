@@ -242,7 +242,7 @@ public class Window extends javax.swing.JFrame {
 		});
 		menuOpciones.add(limpiarDatos);
 		menuBar.add(menuOpciones);
-		/*-------------*/
+		/*------------*/
 		JMenu menuInformes = new JMenu("Informes");
 		menuInformes.setMnemonic(KeyEvent.VK_I);
 		JMenuItem abrirFacturas = new JMenuItem("Facturas");
