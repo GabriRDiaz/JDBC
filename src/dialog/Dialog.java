@@ -126,14 +126,18 @@ public class Dialog extends javax.swing.JDialog {
     	String user = jTextField1.getText();
     	String pass = new String(jPasswordField1.getPassword());
     	if(user.equals("") || pass.equals("")) {
-    	   JOptionPane.showMessageDialog(this, "Rellene los campos", "Error", JOptionPane.ERROR_MESSAGE);
+    	   JOptionPane.showMessageDialog(this, "Rellene ambos campos", "Error", JOptionPane.ERROR_MESSAGE);
        } else {
     	   window = new Window(this, user, pass);
     	   window.setVisible(true);
        }
     }  
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
-    	System.exit(0);
+    	if(window == null) {
+    		System.exit(0);
+    	} else {
+    		this.setVisible(false);
+    	}
     }
 
     /**

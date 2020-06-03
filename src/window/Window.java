@@ -213,7 +213,7 @@ public class Window extends javax.swing.JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Cambiar");
+				changeUser();
 			}
 		});
 		menuOpciones.add(cambiarUsuario);
@@ -271,6 +271,10 @@ public class Window extends javax.swing.JFrame {
 		menuBar.add(menuInformes);
 		setJMenuBar(menuBar);
 	}
+    public void changeUser(){
+    	this.setVisible(false);
+		dialog.setVisible(true);
+    }
     /**
      * @param args the command line arguments
      */
