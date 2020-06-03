@@ -2,13 +2,20 @@ package window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
+import javax.swing.JDialog;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 import dialog.Dialog;
+import connection.DbConnection;
 
 /**
  *
@@ -18,6 +25,8 @@ public class Window extends javax.swing.JFrame {
 	private static Dialog dialog;
 	private static String user;
 	private static String pass;
+	private String dniInsert;
+	private Connection connect = null;
     /**
      * Creates new form Window
      */
@@ -225,7 +234,7 @@ public class Window extends javax.swing.JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Cargar");
+				insertDni();
 			}
 		});
 		menuOpciones.add(cargarDatos);
@@ -271,10 +280,99 @@ public class Window extends javax.swing.JFrame {
 		menuBar.add(menuInformes);
 		setJMenuBar(menuBar);
 	}
-    public void changeUser(){
+    private void changeUser(){
     	this.setVisible(false);
-		dialog.setVisible(true);
+		this.dialog.setVisible(true);
     }
+    private void insertDni() {
+    	dniInsert = null;
+    	dniInsert = JOptionPane.showInputDialog(this, "Introduzca el Dni");
+       	if(dniInsert == null || dniInsert.equals("")) {
+    		return;
+    	}
+    	if(condiciones()) {
+    		getInfo(dniInsert);
+    	} else {
+    		return;
+    	}
+    }
+    private boolean condiciones() {
+    	if(validarDni(dniInsert)==false) {
+    	JOptionPane.showMessageDialog(this, "Introduzca un Dni válido", "Error", JOptionPane.ERROR_MESSAGE);
+    	insertDni();
+    	}
+    	if(dniInsert == null || dniInsert.equals("")) {
+    		return false;
+    	}
+    	return true;
+    }
+    
+    private boolean validarDni(String dni) {
+    	if(dni.length()==9) {
+    		char letra = dni.charAt(8);
+    		if(Character.isLetter(letra)) {
+    			return true;
+    		}
+    		dniInsert = null;
+    		return false;
+    	}
+    	dniInsert = null;
+    	return false;
+    }
+
+	private void getInfo(String dni) {
+		try {
+			PreparedStatement ps = establishConnection().getConexion().prepareStatement(
+					"SELECT * "
+					+ "FROM clientes WHERE DNI = ?");
+			ps.setString(1, dni);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next() == false) {
+				dniInsert = null;
+		    	JOptionPane.showMessageDialog(this, "El DNI no existe en la DB", "Error", JOptionPane.ERROR_MESSAGE);
+		    	insertDni();
+			}else {
+				do {
+					showInfo(rs);
+				}while(rs.next());
+			}
+		}
+	catch (SQLException e) {
+			System.out.println("ERROR");
+			e.printStackTrace();
+		}			
+	}
+	
+	private void showInfo(ResultSet rs) {
+		try {
+			jTextField1.setEnabled(false);
+	    	jTextField2.setEnabled(false);
+	    	jTextField3.setEnabled(false);
+	    	jTextField4.setEnabled(false);
+	    	jTextField5.setEnabled(false);
+	    	jDateChooser1.setEnabled(false);
+			jTextField1.setText(rs.getString("DNI"));
+			jTextField2.setText(rs.getString("Nombre"));
+			jTextField3.setText(rs.getString("Ape1"));
+			jTextField4.setText(rs.getString("Ape2"));
+			jTextField5.setText(rs.getString("Fec_Nac"));
+	    	this.revalidate();
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(this, "Error al extraer la información", "Error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
+	}
+    private DbConnection establishConnection() {
+		connect = null;
+		try {
+			DbConnection connection = new DbConnection(connect, dialog.getUser(), dialog.getPass());
+			return connection;
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(this, "Error en la conexión a la DB", "Error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
+		return null;
+	}
     /**
      * @param args the command line arguments
      */

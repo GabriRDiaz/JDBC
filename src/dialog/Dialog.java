@@ -16,6 +16,8 @@ import window.Window;
  */
 public class Dialog extends javax.swing.JDialog {
 	Window window;
+	String user;
+	String pass;
     /**
      * Creates new form Dialog
      */
@@ -123,8 +125,8 @@ public class Dialog extends javax.swing.JDialog {
     }                                           
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-    	String user = jTextField1.getText();
-    	String pass = new String(jPasswordField1.getPassword());
+    	user = jTextField1.getText();
+    	pass = new String(jPasswordField1.getPassword());
     	if(user.equals("") || pass.equals("")) {
     	   JOptionPane.showMessageDialog(this, "Rellene ambos campos", "Error", JOptionPane.ERROR_MESSAGE);
        } else {
@@ -137,10 +139,19 @@ public class Dialog extends javax.swing.JDialog {
     		System.exit(0);
     	} else {
     		this.setVisible(false);
+    		window.setVisible(true);
     	}
     }
 
-    /**
+    public String getUser() {
+		return user;
+	}
+
+	public String getPass() {
+		return pass;
+	}
+
+	/**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
