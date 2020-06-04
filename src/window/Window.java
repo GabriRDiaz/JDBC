@@ -264,7 +264,7 @@ public class Window extends javax.swing.JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				showFacturas(jTextField1.getText());
+				showInvoices(jTextField1.getText());
 			}
 		});
 		menuInformes.add(abrirFacturas);
@@ -276,14 +276,31 @@ public class Window extends javax.swing.JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Clientes");
+				showClients();
 			}
 		});
 		menuInformes.add(abrirClientes);
 		menuBar.add(menuInformes);
 		setJMenuBar(menuBar);
 	}
-    private void showFacturas(String dni) {
+    private void showClients(){
+		try {
+			PreparedStatement ps = establishConnection().getConexion().prepareStatement(
+					"SELECT * "
+					+ "FROM clientes");
+			ResultSet rs = ps.executeQuery();
+			Report report = new Report(rs);
+			report.setVisible(true);
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Error al mostrar los datos", JOptionPane.ERROR_MESSAGE);
+			try {
+				if (connect != null) {
+					connect.close();
+				}
+			} catch (SQLException e1) {}
+		}
+    }
+    private void showInvoices(String dni) {
     	if(jTextField1.isEnabled()) {
     		if(jTextField1 == null || jTextField1.getText().equals("")) {
         		try {

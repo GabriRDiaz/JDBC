@@ -1,6 +1,7 @@
 package dialog;
 
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 
 import window.Window;
 
@@ -25,6 +26,8 @@ public class Dialog extends javax.swing.JDialog {
         super();
         initComponents();
         this.setLocationRelativeTo(null);
+        jPasswordField1.setText("123");
+        jTextField1.setText("pma");
     }
 
     /**
