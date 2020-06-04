@@ -264,11 +264,7 @@ public class Window extends javax.swing.JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(jTextField1.isEnabled()) {
-						facturasAll();
-				}else {
-					facturasUser(jTextField1.getText());
-				}
+				showFacturas(jTextField1.getText());
 			}
 		});
 		menuInformes.add(abrirFacturas);
@@ -287,48 +283,69 @@ public class Window extends javax.swing.JFrame {
 		menuBar.add(menuInformes);
 		setJMenuBar(menuBar);
 	}
-    private void facturasUser(String dni) {
-    	System.out.println(jTextField1.getText());
-    	System.out.println(dni);
-    	try {
-			PreparedStatement ps = establishConnection().getConexion().prepareStatement(
-					"SELECT * "
-					+ "FROM facturas WHERE cliente = ?");
-			ps.setString(1, dni);
-			ResultSet rs = ps.executeQuery();
-			if(rs.next()==false) {
-				JOptionPane.showMessageDialog(this, "No existe ese DNI en la DB", "Error en la consulta", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			Report report = new Report(rs);
-			report.setVisible(true);	
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(this, e.getMessage(), "Error al mostrar los datos", JOptionPane.ERROR_MESSAGE);
-			try {
-				if (connect != null) {
-					connect.close();
-				}
-			} catch (SQLException e1) {}
-		}
+    private void showFacturas(String dni) {
+    	if(jTextField1.isEnabled()) {
+    		if(jTextField1 == null || jTextField1.getText().equals("")) {
+        		try {
+        			PreparedStatement ps = establishConnection().getConexion().prepareStatement(
+        					"SELECT * "
+        					+ "FROM facturas");
+        			ResultSet rs = ps.executeQuery();
+        			Report report = new Report(rs);
+        			report.setVisible(true);
+        		} catch (SQLException e) {
+        			JOptionPane.showMessageDialog(this, e.getMessage(), "Error al mostrar los datos", JOptionPane.ERROR_MESSAGE);
+        			try {
+        				if (connect != null) {
+        					connect.close();
+        				}
+        			} catch (SQLException e1) {}
+        		}
+    		}else {
+        		try {
+        			PreparedStatement ps = establishConnection().getConexion().prepareStatement(
+        					"SELECT * "
+        					+ "FROM facturas WHERE cliente = ?");
+        			ps.setString(1, dni);
+        			ResultSet rs = ps.executeQuery();
+        			 if(!rs.isBeforeFirst()){
+        				 JOptionPane.showMessageDialog(this, "No existe ese DNI en la DB", "DNI no encontrado", JOptionPane.ERROR_MESSAGE);
+        			 }
+        	           else{
+    	        	   Report report = new Report(rs);
+               			report.setVisible(true);
+           			}
+        		} catch (SQLException e) {
+        			JOptionPane.showMessageDialog(this, e.getMessage(), "Error al mostrar los datos", JOptionPane.ERROR_MESSAGE);
+        			try {
+        				if (connect != null) {
+        					connect.close();
+        				}
+        			} catch (SQLException e1) {}
+        		}
+    		}
+    	}
+    	if(!jTextField1.isEnabled()){
+    		try {
+    			PreparedStatement ps = establishConnection().getConexion().prepareStatement(
+    					"SELECT * "
+    					+ "FROM facturas WHERE cliente = ?");
+    			ps.setString(1, dni);
+    			ResultSet rs = ps.executeQuery();
+    			Report report = new Report(rs);
+    			report.setVisible(true);	
+    		} catch (SQLException e) {
+    			JOptionPane.showMessageDialog(this, e.getMessage(), "Error al mostrar los datos", JOptionPane.ERROR_MESSAGE);
+    			try {
+    				if (connect != null) {
+    					connect.close();
+    				}
+    			} catch (SQLException e1) {}
+    		}
+    	}
+    	
     }
-    private void facturasAll() {
-    	System.out.println(jTextField1.getText());
-    	try {
-			PreparedStatement ps = establishConnection().getConexion().prepareStatement(
-					"SELECT * "
-					+ "FROM facturas");
-			ResultSet rs = ps.executeQuery();
-			Report report = new Report(rs);
-			report.setVisible(true);
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(this, e.getMessage(), "Error al mostrar los datos", JOptionPane.ERROR_MESSAGE);
-			try {
-				if (connect != null) {
-					connect.close();
-				}
-			} catch (SQLException e1) {}
-		}
-    }
+    
     private void changeUser(){
     	this.setVisible(false);
 		this.dialog.setVisible(true);
