@@ -7,7 +7,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,6 +99,7 @@ public class Window extends javax.swing.JFrame {
         
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel5.setText(campos.get(4));
+        
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -115,14 +119,20 @@ public class Window extends javax.swing.JFrame {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
-        });
-
+        });       
+        
         jButton2.setText("Actualizar cliente");
 
         jButton3.setText("Eliminar cliente");
-
+        
         jDateChooser1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-
+        jDateChooser1.setDateFormatString("dd/MM/yyyy");
+        jDateChooser1.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jDateChooser1PropertyChange(evt);
+            }
+        });
+        
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -238,7 +248,16 @@ public class Window extends javax.swing.JFrame {
 
     private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {                                            
         // TODO add your handling code here:
-    }                                           
+    }        
+    
+    private void jDateChooser1PropertyChange(java.beans.PropertyChangeEvent evt) {                                             
+    	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+	    Date date = jDateChooser1.getDate();
+	    String dateString = String.format("%1$td-%1$tm-%1$tY", date);
+	    jTextField5.setText(dateString);
+	    revalidate();
+    }                                            
+
     
     private void menuBar() {
 		JMenuBar menuBar = new JMenuBar();
@@ -480,7 +499,6 @@ public class Window extends javax.swing.JFrame {
     	jTextField3.setText("");
     	jTextField4.setEnabled(true);
     	jTextField4.setText("");
-    	jTextField5.setEnabled(true);
     	jTextField5.setText("");
     	jDateChooser1.setEnabled(true);
     	jDateChooser1.cleanup();
