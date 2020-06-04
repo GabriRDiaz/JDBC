@@ -101,18 +101,8 @@ public class Window extends javax.swing.JFrame {
         jLabel5.setText(campos.get(4));
         
         
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
 
     	jTextField5.setEnabled(false);
-        jTextField5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField5ActionPerformed(evt);
-            }
-        });
 
         jButton1.setText("Crear cliente");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -245,12 +235,7 @@ public class Window extends javax.swing.JFrame {
 				}
 			} catch (SQLException e1) {}
 		}
-	}
-    
-
-	private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        // TODO add your handling code here:
-    }                                           
+	}                                       
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         if(jTextField1.getText().equals("") || jTextField2.getText().equals("") || jTextField3.getText().equals("") || jTextField5.getText().equals("null-null-null") || jTextField5.getText().equals("")) {
@@ -269,10 +254,6 @@ public class Window extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         delClient();
       }   
-
-    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        // TODO add your handling code here:
-    }        
     
     private void jDateChooser1PropertyChange(java.beans.PropertyChangeEvent evt) {                                             
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -419,7 +400,7 @@ public class Window extends javax.swing.JFrame {
         	try {
     			PreparedStatement ps = establishConnection().getConexion().prepareStatement(
     					"DELETE FROM clientes WHERE DNI = ?");
-    			ps.setString(1, jTextField2.getText());
+    			ps.setString(1, jTextField1.getText());
     			int filasUpd = ps.executeUpdate();
     			String exito = "Se ha(n) actualizado correctamente " + filasUpd + " filas";
     			JOptionPane.showMessageDialog(this, exito, "Éxito", JOptionPane.INFORMATION_MESSAGE);

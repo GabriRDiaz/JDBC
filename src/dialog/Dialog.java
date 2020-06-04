@@ -26,7 +26,6 @@ public class Dialog extends javax.swing.JDialog {
         super();
         initComponents();
         this.setLocationRelativeTo(null);
-
     }
 
     /**
