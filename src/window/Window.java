@@ -39,6 +39,7 @@ public class Window extends javax.swing.JFrame {
 	private String dniInsert;
 	private ArrayList<String> campos;
 	private String titulo;
+	public String exito;
 	private Connection connect = null;
     /**
      * Creates new form Window
@@ -100,14 +101,14 @@ public class Window extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel5.setText(campos.get(4));
         
-
+        
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
             }
         });
 
-        jTextField5.setFocusable(false);
+    	jTextField5.setEnabled(false);
         jTextField5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField5ActionPerformed(evt);
@@ -243,7 +244,11 @@ public class Window extends javax.swing.JFrame {
     }                                           
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        // TODO add your handling code here:
+        if(jTextField1.getText().equals("") || jTextField2.getText().equals("") || jTextField3.getText().equals("") || jTextField5.getText().equals("null-null-null") || jTextField5.getText().equals("")) {
+        	JOptionPane.showMessageDialog(this, "Rellene todos los campos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+        	insertClient();
+        }
     }                                        
 
     private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {                                            
@@ -251,9 +256,9 @@ public class Window extends javax.swing.JFrame {
     }        
     
     private void jDateChooser1PropertyChange(java.beans.PropertyChangeEvent evt) {                                             
-    	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    Date date = jDateChooser1.getDate();
-	    String dateString = String.format("%1$td-%1$tm-%1$tY", date);
+	    String dateString = String.format("%1$ty-%1$tm-%1$td", date);
 	    jTextField5.setText(dateString);
 	    revalidate();
     }                                            
@@ -328,6 +333,36 @@ public class Window extends javax.swing.JFrame {
 		menuBar.add(menuInformes);
 		setJMenuBar(menuBar);
 	}
+    private void insertClient() {
+    	if(validarDni(jTextField1.getText())==false) {
+        	JOptionPane.showMessageDialog(this, "Error en el DNI", "Error", JOptionPane.ERROR_MESSAGE);
+        	return;
+    	}else {
+        	try {
+    			PreparedStatement ps = establishConnection().getConexion().prepareStatement(
+    					"INSERT INTO clientes "
+    				+ "(DNI, Nombre, Ape1, Ape2, Fec_Nac)" 
+    				+ "VALUES (?, ?, ?, ?, ?)");
+    			ps.setString(1, jTextField1.getText());
+    			ps.setString(2, jTextField2.getText());
+    			ps.setString(3, jTextField3.getText());
+    			ps.setString(4, jTextField4.getText());
+    			ps.setString(5, jTextField5.getText());
+    			int filasUpd = ps.executeUpdate();
+    			exito = "Se ha(n) actualizado correctamente " + filasUpd + " filas";
+    			} catch (SQLException e) {
+    				JOptionPane.showMessageDialog(this, e.getMessage(), "Error al cargar los datos", JOptionPane.ERROR_MESSAGE);
+    				try {
+    					if (connect != null) {
+    						connect.close();
+    					}
+    				} catch (SQLException e1) {}
+    			}
+        	 	JOptionPane.showMessageDialog(this, exito, "Éxito", JOptionPane.INFORMATION_MESSAGE);	
+		}
+    		}
+
+
     private void showClients(){
 		try {
 			PreparedStatement ps = establishConnection().getConexion().prepareStatement(
@@ -466,7 +501,7 @@ public class Window extends javax.swing.JFrame {
 			}
 		}
 	catch (SQLException e) {
-			System.out.println("ERROR");
+		JOptionPane.showMessageDialog(this, e.getMessage(), "Error al mostrar los datos", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}			
 	}
@@ -477,7 +512,6 @@ public class Window extends javax.swing.JFrame {
 	    	jTextField2.setEnabled(false);
 	    	jTextField3.setEnabled(false);
 	    	jTextField4.setEnabled(false);
-	    	jTextField5.setEnabled(false);
 	    	jDateChooser1.setEnabled(false);
 			jTextField1.setText(rs.getString("DNI"));
 			jTextField2.setText(rs.getString("Nombre"));
