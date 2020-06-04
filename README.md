@@ -20,6 +20,8 @@
   - JDateChooser.
 - Validación de DNI.
 
+**IMÁGENES** 
+
 [Login](https://imgur.com/2Nkn7z2)
 
 [Main menu](https://imgur.com/undefined)
