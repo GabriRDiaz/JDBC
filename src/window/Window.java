@@ -5,9 +5,15 @@ import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -28,6 +34,8 @@ public class Window extends javax.swing.JFrame {
 	private static String user;
 	private static String pass;
 	private String dniInsert;
+	private ArrayList<String> campos;
+	private String titulo;
 	private Connection connect = null;
     /**
      * Creates new form Window
@@ -48,8 +56,7 @@ public class Window extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
-
-        jPanel1 = new javax.swing.JPanel();
+    	jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -66,28 +73,29 @@ public class Window extends javax.swing.JFrame {
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Clientes");
+        setTitle(titulo);
         setBackground(new java.awt.Color(153, 153, 153));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setSize(new java.awt.Dimension(800, 500));
         setLocationRelativeTo(null);
         setResizable(false);
+        getNames();
         menuBar();
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setText("DNI");
-
+        jLabel1.setText(campos.get(0));
+        
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel2.setText("Nombre");
-
+        jLabel2.setText(campos.get(1));
+        
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel3.setText("Apellido 1");
-
+        jLabel3.setText(campos.get(2));
+        
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel4.setText("Apellido 2");
-
+        jLabel4.setText(campos.get(3));
+        
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel5.setText("Fecha de nacimiento");
+        jLabel5.setText(campos.get(4));
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -130,15 +138,12 @@ public class Window extends javax.swing.JFrame {
                         .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel4))
-                                .addGap(73, 73, 73))
-                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(16, 16, 16)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5))
+                        .addGap(89, 89, 89)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jTextField4, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -198,11 +203,32 @@ public class Window extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25))
         );
-
-        pack();
     }// </editor-fold>                        
+    
+    private void getNames() {
+		try {
+			PreparedStatement ps = establishConnection().getConexion().prepareStatement(
+					"SELECT * "
+					+ "FROM clientes");
+			ResultSet rs = ps.executeQuery();
+			ResultSetMetaData rsmd = rs.getMetaData();
+			campos = new ArrayList<String>();
+			for(int i=1; i<6; i++) {
+				campos.add(rsmd.getColumnName(i));
+			}
+			
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Error al mostrar los datos", JOptionPane.ERROR_MESSAGE);
+			try {
+				if (connect != null) {
+					connect.close();
+				}
+			} catch (SQLException e1) {}
+		}
+	}
+    
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {                                            
+	private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {                                            
         // TODO add your handling code here:
     }                                           
 
