@@ -39,7 +39,6 @@ public class Window extends javax.swing.JFrame {
 	private String dniInsert;
 	private ArrayList<String> campos;
 	private String titulo;
-	public String exito;
 	private Connection connect = null;
     /**
      * Creates new form Window
@@ -123,8 +122,18 @@ public class Window extends javax.swing.JFrame {
         });       
         
         jButton2.setText("Actualizar cliente");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });       
 
         jButton3.setText("Eliminar cliente");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });       
         
         jDateChooser1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jDateChooser1.setDateFormatString("dd/MM/yyyy");
@@ -249,7 +258,17 @@ public class Window extends javax.swing.JFrame {
         } else {
         	insertClient();
         }
-    }                                        
+    }       
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    	 if(jTextField1.getText().equals("") || jTextField2.getText().equals("") || jTextField3.getText().equals("") || jTextField5.getText().equals("null-null-null") || jTextField5.getText().equals("")) {
+         	JOptionPane.showMessageDialog(this, "Rellene todos los campos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+         } else {
+         	updateClient();
+         }
+    }   
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        delClient();
+      }   
 
     private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {                                            
         // TODO add your handling code here:
@@ -349,7 +368,8 @@ public class Window extends javax.swing.JFrame {
     			ps.setString(4, jTextField4.getText());
     			ps.setString(5, jTextField5.getText());
     			int filasUpd = ps.executeUpdate();
-    			exito = "Se ha(n) actualizado correctamente " + filasUpd + " filas";
+    			String exito = "Se ha(n) actualizado correctamente " + filasUpd + " filas";
+    			JOptionPane.showMessageDialog(this, exito, "Éxito", JOptionPane.INFORMATION_MESSAGE);
     			} catch (SQLException e) {
     				JOptionPane.showMessageDialog(this, e.getMessage(), "Error al cargar los datos", JOptionPane.ERROR_MESSAGE);
     				try {
@@ -358,7 +378,59 @@ public class Window extends javax.swing.JFrame {
     					}
     				} catch (SQLException e1) {}
     			}
-        	 	JOptionPane.showMessageDialog(this, exito, "Éxito", JOptionPane.INFORMATION_MESSAGE);	
+		}
+    		}
+    private void updateClient() {
+    	if(validarDni(jTextField1.getText())==false) {
+        	JOptionPane.showMessageDialog(this, "Error en el DNI", "Error", JOptionPane.ERROR_MESSAGE);
+        	return;
+    	}else {
+        	try {
+    			PreparedStatement ps = establishConnection().getConexion().prepareStatement(
+    							"UPDATE clientes " 
+    							+ "SET Nombre = ?, "
+    							+ "Ape1 = ?, "
+    							+ "Ape2 = ?,"
+    							+ "Fec_Nac = ? "
+    							+ "WHERE dni = ? ");
+    			ps.setString(1, jTextField2.getText());
+    			ps.setString(2, jTextField3.getText());
+    			ps.setString(3, jTextField4.getText());
+    			ps.setString(4, jTextField5.getText());
+    			ps.setString(5, jTextField1.getText());
+    			int filasUpd = ps.executeUpdate();
+    			String exito = "Se ha(n) actualizado correctamente " + filasUpd + " filas";
+    			JOptionPane.showMessageDialog(this, exito, "Éxito", JOptionPane.INFORMATION_MESSAGE);
+    			} catch (SQLException e) {
+    				JOptionPane.showMessageDialog(this, e.getMessage(), "Error al actualizar los datos", JOptionPane.ERROR_MESSAGE);
+    				try {
+    					if (connect != null) {
+    						connect.close();
+    					}
+    				} catch (SQLException e1) {}
+    			}	
+		}
+    		}
+    private void delClient() {
+    	if(validarDni(jTextField1.getText())==false) {
+        	JOptionPane.showMessageDialog(this, "Error en el DNI", "Error", JOptionPane.ERROR_MESSAGE);
+        	return;
+    	}else {
+        	try {
+    			PreparedStatement ps = establishConnection().getConexion().prepareStatement(
+    					"DELETE FROM clientes WHERE DNI = ?");
+    			ps.setString(1, jTextField2.getText());
+    			int filasUpd = ps.executeUpdate();
+    			String exito = "Se ha(n) actualizado correctamente " + filasUpd + " filas";
+    			JOptionPane.showMessageDialog(this, exito, "Éxito", JOptionPane.INFORMATION_MESSAGE);
+    			} catch (SQLException e) {
+    				JOptionPane.showMessageDialog(this, e.getMessage(), "Error al borrar los datos", JOptionPane.ERROR_MESSAGE);
+    				try {
+    					if (connect != null) {
+    						connect.close();
+    					}
+    				} catch (SQLException e1) {}
+    			}	
 		}
     		}
 
