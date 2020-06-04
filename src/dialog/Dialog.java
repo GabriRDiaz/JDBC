@@ -132,6 +132,7 @@ public class Dialog extends javax.swing.JDialog {
        } else {
     	   window = new Window(this, user, pass);
     	   window.setVisible(true);
+    	   this.setVisible(false);
        }
     }  
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
