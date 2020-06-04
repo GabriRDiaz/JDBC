@@ -8,5 +8,4 @@ public class Main {
 	Dialog dialog = new Dialog();
 	dialog.setVisible(true);
 	}
-
 }

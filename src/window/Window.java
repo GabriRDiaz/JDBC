@@ -246,7 +246,7 @@ public class Window extends javax.swing.JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Limpiar");
+				limpiarDatos();
 			}
 		});
 		menuOpciones.add(limpiarDatos);
@@ -286,7 +286,7 @@ public class Window extends javax.swing.JFrame {
     }
     private void insertDni() {
     	dniInsert = null;
-    	dniInsert = JOptionPane.showInputDialog(this, "Introduzca el Dni");
+    	dniInsert = JOptionPane.showInputDialog(this, "Introduzca el Dni", "Cargar datos", JOptionPane.INFORMATION_MESSAGE);
        	if(dniInsert == null || dniInsert.equals("")) {
     		return;
     	}
@@ -361,6 +361,21 @@ public class Window extends javax.swing.JFrame {
 			JOptionPane.showMessageDialog(this, "Error al extraer la información", "Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
+	}
+	private void limpiarDatos() {
+		jTextField1.setEnabled(true);
+		jTextField1.setText("");
+    	jTextField2.setEnabled(true);
+    	jTextField2.setText("");
+    	jTextField3.setEnabled(true);
+    	jTextField3.setText("");
+    	jTextField4.setEnabled(true);
+    	jTextField4.setText("");
+    	jTextField5.setEnabled(true);
+    	jTextField5.setText("");
+    	jDateChooser1.setEnabled(true);
+    	jDateChooser1.cleanup();
+    	revalidate();
 	}
     private DbConnection establishConnection() {
 		connect = null;
