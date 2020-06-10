@@ -1,6 +1,7 @@
 # Ej5Grd
-**Conexión a DB usando JDBC**
 
+**CONEXIÓN A DB USANDO JDBC**
+---
 **FEATURES** (Nota: De encontrar un bug, sepa que no se trata de un bug, si no de una feature no listada xP ).
 
 - JDBC
@@ -22,6 +23,8 @@
   - JDateChooser.
 - Validación de DNI.
 
+---
+
 **IMÁGENES** 
 
 [Login](https://imgur.com/2Nkn7z2)
@@ -31,6 +34,8 @@
 [JTable](https://imgur.com/J2vwkJb)
 
 [JDateChooser](https://imgur.com/rVR2WWC)
+
+---
 
 **SCRIPT DB**
 
